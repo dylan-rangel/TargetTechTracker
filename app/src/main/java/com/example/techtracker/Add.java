@@ -1,5 +1,6 @@
 package com.example.techtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +13,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class Add extends AppCompatActivity {
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
+public class Add extends AppCompatActivity {
+    Intent intent = new Intent(Add.this, DatabaseHelper.class);
     EditText mobileSales_input, electronicsSales_input;
-    Button add_button;
+    Button add_button, acButton, nmpButton, prepaidButton, supportButton, consumerButton;
+    java.util.Date currentDate = new java.util.Date();
 
 
     @Override
@@ -28,9 +34,8 @@ public class Add extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         mobileSales_input = findViewById(R.id.mobile_sales);
-        electronicsSales_input = findViewById(R.id.mobile_sales);
+        electronicsSales_input = findViewById(R.id.electronics_sales);
         add_button = findViewById(R.id.add_button);
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +67,7 @@ public class Add extends AppCompatActivity {
                 }
 
                 if (mobileSalesText.isEmpty() && electronicsSalesText.isEmpty()) {
+                    mobileSales_input.setError("Please enter a valid number");
                     electronicsSales_input.setError("Please enter a valid number");
                     fail = true;
                 }
@@ -69,8 +75,55 @@ public class Add extends AppCompatActivity {
                 // If both are valid, proceed with database insertion
                 if (mobileSales >= 0 && electronicsSales >= 0 && !fail) {
                     DatabaseHelper myDB = new DatabaseHelper(Add.this);
-                    myDB.addSale(mobileSales, electronicsSales, 0, 0, 0, 0, 0, "01-01-2025");
+                    GlobalString.getInstance().setToast("Sale Added");
+                    myDB.addSale(mobileSales, electronicsSales, 0, 0, 0, 0, 0, currentDate);
+
                 }
+            }
+        });
+        acButton = findViewById(R.id.acButton);
+        acButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper myDB = new DatabaseHelper(Add.this);
+                GlobalString.getInstance().setToast("AppleCare Added");
+                myDB.addSale(0, 0, 0, 0, 0, 1, 0, currentDate);
+            }
+        });
+        nmpButton = findViewById(R.id.nmpButton);
+        nmpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper myDB = new DatabaseHelper(Add.this);
+                GlobalString.getInstance().setToast("NMP Added");
+                myDB.addSale(0, 0, 1, 0, 0, 0, 0, currentDate);
+            }
+        });
+        prepaidButton = findViewById(R.id.prepaidButton);
+        prepaidButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper myDB = new DatabaseHelper(Add.this);
+                GlobalString.getInstance().setToast("Prepaid Added");
+                myDB.addSale(0, 0, 0, 1, 0, 0, 0, currentDate);
+            }
+        });
+        supportButton = findViewById(R.id.supportButton);
+        supportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper myDB = new DatabaseHelper(Add.this);
+                GlobalString.getInstance().setToast("Support Ticket Added");
+                myDB.addSale(0, 0, 0, 0, 1, 0, 0, currentDate);
+            }
+        });
+        consumerButton = findViewById(R.id.consumerButton);
+        consumerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper myDB = new DatabaseHelper(Add.this);
+                GlobalString.getInstance().setToast("Consumer Celluar Added");
+                myDB.addSale(0, 0, 0, 0, 0, 0, 1, currentDate);
             }
         });
     }
