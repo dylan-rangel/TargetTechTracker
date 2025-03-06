@@ -32,7 +32,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static final String SALE_DATE = "sale_date";
     private static final String SALE_TIME = "sale_time";
 
-    public DatabaseHelper(@Nullable Context context) {
+    DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
@@ -95,5 +95,41 @@ class DatabaseHelper extends SQLiteOpenHelper {
             cursor = db.rawQuery(query, null);
         }
         return cursor;
+    }
+
+    void updateData(String row_id, String mobilesale, String electronicsale, String protectionPlan, String prepaid, String serviceTicket, String applecare, String consumerCell, String date, String time){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(MOBILE_SALE, mobilesale);
+        cv.put(ELECTRONIC_SALE, electronicsale);
+        cv.put(PROTECTION_PLAN, protectionPlan);
+        cv.put(PREPAID, prepaid);
+        cv.put(SERVICE_TICKET, serviceTicket);
+        cv.put(APPLE_CARE, applecare);
+        cv.put(CONSUMER_CELL, consumerCell);
+        cv.put(SALE_DATE, date);
+        cv.put(SALE_TIME, time);
+
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{row_id});
+        if(result ==-1){
+            Toast.makeText(context, "Failed to update", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Updated!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    void deleteOneRow(String row_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(TABLE_NAME, "_id=?", new String[]{row_id});
+        if(result == -1){
+            Toast.makeText(context, "Failed to delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Deleted!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void clear()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NAME);
     }
 }

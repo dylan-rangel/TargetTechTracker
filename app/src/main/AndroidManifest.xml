@@ -14,16 +14,24 @@
         android:theme="@style/Theme.TechTracker"
         tools:targetApi="31">
         <activity
-            android:name=".Add"
-            android:label="Add Sale"
-            android:parentActivityName=".MainActivity"
+            android:name=".DeleteActivity"
             android:exported="false" />
         <activity
+            android:name=".UpdateActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".Add"
+            android:exported="false"
+            android:label="Add Sale"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".MainActivity"
-            android:label="Sales"
-            android:exported="true">
+            android:exported="true"
+            android:label="Sales">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
