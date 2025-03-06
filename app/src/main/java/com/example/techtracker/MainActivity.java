@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -90,12 +91,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRestart() {
+        super.onRestart();
+        recreate();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1){
             recreate();
         }
     }
+
 
     void storeData() {
         Cursor cursor = db.readAllData();
@@ -165,6 +173,14 @@ public class MainActivity extends AppCompatActivity {
         {
             DatabaseHelper db = new DatabaseHelper(this);
             db.clear();
+            File file = new File("/data/data/com.example.techtracker/databases/Sales.db");
+            File file2 = new File("/data/data/com.example.techtracker/databases/Sales.db-journal");
+
+            if (file.exists())
+            {
+                file.delete();
+                file2.delete();
+            }
             recreate();
         }
         if(item.getItemId() == R.id.update)

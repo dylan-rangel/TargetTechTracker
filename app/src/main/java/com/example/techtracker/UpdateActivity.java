@@ -1,10 +1,13 @@
 package com.example.techtracker;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBar;
@@ -21,7 +24,6 @@ public class UpdateActivity extends AppCompatActivity {
     EditText updateMobile_sales, updateElectronics_sales;
     Button updateButton, deleteButton;
     ArrayList<String> data = new ArrayList<>();
-
     String mobile, electronic;
 
     @Override
@@ -68,6 +70,12 @@ public class UpdateActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
     ArrayList<String> getIntentData(){
         ArrayList<String> values = new ArrayList<>();
         if(getIntent().hasExtra("id") && getIntent().hasExtra("Mobile") && getIntent().hasExtra("Electronic"))
@@ -79,6 +87,8 @@ public class UpdateActivity extends AppCompatActivity {
         }
         return values;
     }
+
+
     void setIntentData(ArrayList<String> array) {
         if (!array.get(1).equals("0")) {
             updateMobile_sales.setText(array.get(1));
