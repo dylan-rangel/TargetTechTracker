@@ -71,11 +71,6 @@ public class UpdateActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-    }
-
     ArrayList<String> getIntentData(){
         ArrayList<String> values = new ArrayList<>();
         if(getIntent().hasExtra("id") && getIntent().hasExtra("Mobile") && getIntent().hasExtra("Electronic"))
