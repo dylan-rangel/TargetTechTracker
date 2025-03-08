@@ -18,7 +18,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Add extends AppCompatActivity {
-    Intent intent = new Intent(Add.this, DatabaseHelper.class);
     EditText mobileSales_input, electronicsSales_input;
     Button add_button, acButton, nmpButton, prepaidButton, supportButton, consumerButton;
     java.util.Date currentDate = new java.util.Date();
