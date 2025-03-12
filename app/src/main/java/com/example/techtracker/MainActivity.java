@@ -37,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     FloatingActionButton add_button;
-
     DatabaseHelper db;
     ArrayList<String>table_id, date, time;
     ArrayList<Integer>mobile_sales, electronic_sales, protection_plans, prepaid, service_tickets, applecare, consumer_cellular;
     CustomAdapter customAdapter;
     TextView totalText;
+    java.util.Date currentDate = new java.util.Date();
     private String storeId;
 
     @Override
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         db = new DatabaseHelper(MainActivity.this);
         table_id = new ArrayList<>();
         mobile_sales = new ArrayList<>();
@@ -104,9 +103,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //Adds Data to local arrays
     void storeData() {
-        Cursor cursor = db.readAllData();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = sdf.format(currentDate);
+        Cursor cursor = db.returnCurrentData(GlobalString.getInstance().returnStoreId(), formattedDate);
         if(cursor.getCount() == 0){
             Toast.makeText(this, "No data.", Toast.LENGTH_SHORT).show();
         } else {
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         totalArray.add(totalservice);
         totalArray.add(totalapple);
         totalArray.add(totalconsumer);
-        return totalArray;
+        return totalArray; //reuse in finish saleday
     }
     void setTotals(){
         ArrayList<Integer> totals = getTotals();
@@ -171,18 +172,79 @@ public class MainActivity extends AppCompatActivity {
 
         if(item.getItemId() == R.id.delete_all)
         {
-            DatabaseHelper db = new DatabaseHelper(this);
-            db.clear();
-            File file = new File("/data/data/com.example.techtracker/databases/Sales.db");
-            File file2 = new File("/data/data/com.example.techtracker/databases/Sales.db-journal");
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Delete all sales?");
+            builder.setMessage("Are you sure you want to delete all sales from today?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    db.clear();
+                    File file = new File("/data/data/com.example.techtracker/databases/Sales.db");
+                    File file2 = new File("/data/data/com.example.techtracker/databases/Sales.db-journal");
 
-            if (file.exists())
-            {
-                file.delete();
-                file2.delete();
-            }
-            recreate();
+                    if (file.exists())
+                    {
+                        file.delete();
+                        file2.delete();
+                    }
+                    recreate();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            builder.create().show();
         }
+
+        if(item.getItemId() == R.id.finishDay)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Finish day?");
+            builder.setMessage("Are you sure you want to record all sales from today?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    boolean flag = false;
+                    ArrayList<Integer> totals = getTotals();
+                    currentDate.getTime();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String compare = sdf.format(currentDate);
+                    String currentId = GlobalString.getInstance().returnStoreId();
+                    Cursor cursor = db.readAllStoreDayData();
+                    String position = "null";
+                    while (cursor.moveToNext())
+                    {
+                        if(currentId.equals(cursor.getString(1)) && compare.equals(cursor.getString(9)))
+                        {
+                            flag = true;
+                            position = String.valueOf(cursor.getInt(0));
+                            //if true then update current entry, if false add a new one
+                        }
+                    }
+
+                    if(flag == true && !position.equals("null"))
+                    {
+                        db.updateStoreDay(position, currentId, String.valueOf(totals.get(0)), String.valueOf(totals.get(1) + totals.get(0)), String.valueOf(totals.get(2)), String.valueOf(totals.get(3)), String.valueOf(totals.get(4)), String.valueOf(totals.get(5)), String.valueOf(totals.get(6)), currentDate);
+                    } else {
+                        int temp = totals.get(1) + totals.get(0);
+                        db.addStoreDay(currentId, totals.get(0), temp, totals.get(2), totals.get(3), totals.get(4), totals.get(5), totals.get(6), currentDate);
+                    }
+                    Intent intent = new Intent(MainActivity.this, SaleDays.class);
+                    startActivity(intent);
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            builder.create().show();
+        }
+
         if(item.getItemId() == R.id.update)
         {
             ArrayList<Integer> totalArray = getTotals();
@@ -190,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
             java.util.Date updateTime = new java.util.Date();
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(updateTime);
-            String update = "T" + GlobalString.getInstance().returnStoreId() + " " + time + "\nAccessories: $" + totalArray.get(0) + "\nElectronics: $" + electronics + "\nProtection Plans: " + totalArray.get(2) + "\nPrepaids: " + totalArray.get(3) + "\nService Tickets: " + totalArray.get(4) + "\nAppleCare: " + totalArray.get(5) + "\nConsumer Cellular: " + totalArray.get(6) + "\n \nPosted using Target Tech Tracker Alpha 1.0.2";
+            String update = "T" + GlobalString.getInstance().returnStoreId() + " " + time + "\nAccessories: $" + totalArray.get(0) + "\nElectronics: $" + electronics + "\nProtection Plans: " + totalArray.get(2) + "\nPrepaids: " + totalArray.get(3) + "\nService Tickets: " + totalArray.get(4) + "\nAppleCare: " + totalArray.get(5) + "\nConsumer Cellular: " + totalArray.get(6) + "\n \nPosted using Target Tech Tracker Alpha 1.0.4";
 
             // Copy to clipboard
             ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);

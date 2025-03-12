@@ -14,5 +14,8 @@
         android:id="@+id/storeId"
         android:title="Change Store Number"
         />
-
+    <item
+        android:id="@+id/finishDay"
+        android:title="Finish Day"
+        />
 </menu>

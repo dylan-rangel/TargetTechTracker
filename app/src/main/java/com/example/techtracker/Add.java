@@ -33,6 +33,7 @@ public class Add extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        String storeId = GlobalString.getInstance().returnStoreId();
         mobileSales_input = findViewById(R.id.mobile_sales);
         electronicsSales_input = findViewById(R.id.electronics_sales);
         add_button = findViewById(R.id.add_button);
@@ -75,8 +76,9 @@ public class Add extends AppCompatActivity {
                 if (mobileSales >= 0 && electronicsSales >= 0 && !fail) {
                     DatabaseHelper myDB = new DatabaseHelper(Add.this);
                     GlobalString.getInstance().setToast("Sale Added");
-                    myDB.addSale(mobileSales, electronicsSales, 0, 0, 0, 0, 0, currentDate);
-
+                    myDB.addSale(mobileSales, electronicsSales, 0, 0, 0, 0, 0, currentDate, storeId);
+                    mobileSales_input.setText("");
+                    electronicsSales_input.setText("");
                 }
             }
         });
@@ -86,7 +88,9 @@ public class Add extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
                 GlobalString.getInstance().setToast("AppleCare Added");
-                myDB.addSale(0, 0, 0, 0, 0, 1, 0, currentDate);
+                myDB.addSale(0, 0, 0, 0, 0, 1, 0, currentDate, storeId);
+                mobileSales_input.setText("");
+                electronicsSales_input.setText("");
             }
         });
         nmpButton = findViewById(R.id.nmpButton);
@@ -95,7 +99,9 @@ public class Add extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
                 GlobalString.getInstance().setToast("NMP Added");
-                myDB.addSale(0, 0, 1, 0, 0, 0, 0, currentDate);
+                myDB.addSale(0, 0, 1, 0, 0, 0, 0, currentDate, storeId);
+                mobileSales_input.setText("");
+                electronicsSales_input.setText("");
             }
         });
         prepaidButton = findViewById(R.id.prepaidButton);
@@ -104,7 +110,9 @@ public class Add extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
                 GlobalString.getInstance().setToast("Prepaid Added");
-                myDB.addSale(0, 0, 0, 1, 0, 0, 0, currentDate);
+                myDB.addSale(0, 0, 0, 1, 0, 0, 0, currentDate, storeId);
+                mobileSales_input.setText("");
+                electronicsSales_input.setText("");
             }
         });
         supportButton = findViewById(R.id.supportButton);
@@ -113,7 +121,9 @@ public class Add extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
                 GlobalString.getInstance().setToast("Support Ticket Added");
-                myDB.addSale(0, 0, 0, 0, 1, 0, 0, currentDate);
+                myDB.addSale(0, 0, 0, 0, 1, 0, 0, currentDate, storeId);
+                mobileSales_input.setText("");
+                electronicsSales_input.setText("");
             }
         });
         consumerButton = findViewById(R.id.consumerButton);
@@ -121,8 +131,10 @@ public class Add extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
-                GlobalString.getInstance().setToast("Consumer Celluar Added");
-                myDB.addSale(0, 0, 0, 0, 0, 0, 1, currentDate);
+                GlobalString.getInstance().setToast("Consumer Cellular Added");
+                myDB.addSale(0, 0, 0, 0, 0, 0, 1, currentDate, storeId);
+                mobileSales_input.setText("");
+                electronicsSales_input.setText("");
             }
         });
     }
