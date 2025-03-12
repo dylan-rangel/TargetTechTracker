@@ -1,5 +1,6 @@
 package com.example.techtracker;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,26 +38,41 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
+    String local_store_id;
     FloatingActionButton add_button;
     DatabaseHelper db;
-    ArrayList<String>table_id, date, time;
+    ArrayList<String>table_id, date, time, query;
     ArrayList<Integer>mobile_sales, electronic_sales, protection_plans, prepaid, service_tickets, applecare, consumer_cellular;
     CustomAdapter customAdapter;
     TextView totalText;
     java.util.Date currentDate = new java.util.Date();
     private String storeId;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String formattedDate = sdf.format(currentDate);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        GlobalString.getInstance().init(this);
+        GlobalString.getInstance().init(this); //this might cause some problems
+        local_store_id = GlobalString.getInstance().returnStoreId();
         recyclerView = findViewById(R.id.recyclerView);
         add_button = findViewById(R.id.add_button);
         totalText = findViewById(R.id.rex);
         ActionBar ab = getSupportActionBar();
-        ab.setTitle("Target Tech Sales @ T" + GlobalString.getInstance().returnStoreId());
+        ab.setDisplayHomeAsUpEnabled(true);
+        query = getIntentData();
+        if (query != null && query.size() >= 2) {
+            if (query.get(0).equals(local_store_id) && query.get(1).equals(formattedDate)) {
+                // Do nothing, or any specific action when they match
+            } else {
+                local_store_id = query.get(1);
+                formattedDate = query.get(0);
+            }
+        } else if (query == null || query.isEmpty()) {
+        } else {
+        }
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(customAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         setTotals();
+
+        ab.setTitle("Target Tech Sales @ T" + local_store_id);
     }
 
     @Override
@@ -105,11 +124,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Adds Data to local arrays
     void storeData() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = sdf.format(currentDate);
-        Cursor cursor = db.returnCurrentData(GlobalString.getInstance().returnStoreId(), formattedDate);
+        Cursor cursor = db.returnCurrentData(local_store_id, formattedDate);
         if(cursor.getCount() == 0){
-            Toast.makeText(this, "No data.", Toast.LENGTH_SHORT).show();
+
         } else {
             while (cursor.moveToNext() ) {
                 table_id.add(cursor.getString(0));
@@ -146,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         totalArray.add(totalservice);
         totalArray.add(totalapple);
         totalArray.add(totalconsumer);
-        return totalArray; //reuse in finish saleday
+        return totalArray; //reuse in finished saleday
     }
     void setTotals(){
         ArrayList<Integer> totals = getTotals();
@@ -167,9 +184,27 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    ArrayList<String> getIntentData(){
+        ArrayList<String> values = new ArrayList<>();
+        if(getIntent().hasExtra("date") && getIntent().hasExtra("storeid"))
+        {
+            String[] keys = {"date", "storeid"};
+            for (String key : keys) {
+                values.add(getIntent().getStringExtra(key));
+            }
+        }
+        return values;
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
+        if(item.getItemId() == android.R.id.home)
+        {
+            Intent intent = new Intent(MainActivity.this, SaleDays.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
         if(item.getItemId() == R.id.delete_all)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -178,15 +213,10 @@ public class MainActivity extends AppCompatActivity {
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    db.clear();
-                    File file = new File("/data/data/com.example.techtracker/databases/Sales.db");
-                    File file2 = new File("/data/data/com.example.techtracker/databases/Sales.db-journal");
-
-                    if (file.exists())
-                    {
-                        file.delete();
-                        file2.delete();
-                    }
+                    currentDate.getTime();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String compare = sdf.format(currentDate);
+                    db.deleteQuery(local_store_id, compare);
                     recreate();
                 }
             });
@@ -212,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     currentDate.getTime();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String compare = sdf.format(currentDate);
-                    String currentId = GlobalString.getInstance().returnStoreId();
+                    String currentId = local_store_id;
                     Cursor cursor = db.readAllStoreDayData();
                     String position = "null";
                     while (cursor.moveToNext())
@@ -230,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
                         db.updateStoreDay(position, currentId, String.valueOf(totals.get(0)), String.valueOf(totals.get(1) + totals.get(0)), String.valueOf(totals.get(2)), String.valueOf(totals.get(3)), String.valueOf(totals.get(4)), String.valueOf(totals.get(5)), String.valueOf(totals.get(6)), currentDate);
                     } else {
                         int temp = totals.get(1) + totals.get(0);
-                        db.addStoreDay(currentId, totals.get(0), temp, totals.get(2), totals.get(3), totals.get(4), totals.get(5), totals.get(6), currentDate);
+                        db.addStoreDay(currentId, totals.get(0), temp, totals.get(2), totals.get(3), totals.get(4), totals.get(5), totals.get(6), sdf.format(currentDate));
                     }
                     Intent intent = new Intent(MainActivity.this, SaleDays.class);
                     startActivity(intent);
@@ -252,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
             java.util.Date updateTime = new java.util.Date();
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(updateTime);
-            String update = "T" + GlobalString.getInstance().returnStoreId() + " " + time + "\nAccessories: $" + totalArray.get(0) + "\nElectronics: $" + electronics + "\nProtection Plans: " + totalArray.get(2) + "\nPrepaids: " + totalArray.get(3) + "\nService Tickets: " + totalArray.get(4) + "\nAppleCare: " + totalArray.get(5) + "\nConsumer Cellular: " + totalArray.get(6) + "\n \nPosted using Target Tech Tracker Alpha 1.0.4";
+            String update = "T" + local_store_id + " " + time + "\nAccessories: $" + totalArray.get(0) + "\nElectronics: $" + electronics + "\nProtection Plans: " + totalArray.get(2) + "\nPrepaids: " + totalArray.get(3) + "\nService Tickets: " + totalArray.get(4) + "\nAppleCare: " + totalArray.get(5) + "\nConsumer Cellular: " + totalArray.get(6) + "\n \nPosted using Target Tech Tracker Alpha 1.1.1";
 
             // Copy to clipboard
             ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -286,7 +316,11 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Store number must be numeric", Toast.LENGTH_SHORT).show();
                     } else {
                         GlobalString.getInstance().setStoreId(storeId, MainActivity.this);
-                        recreate();
+                        local_store_id = storeId;
+                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finishAffinity();  // This finishes all activities in the stack
                     }
 
                 }

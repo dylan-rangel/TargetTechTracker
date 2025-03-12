@@ -129,11 +129,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Add StoreDay entry to store_day table
-    void addStoreDay(String storeId, int totalMobile, int totalElectronic, int totalNMP, int totalPP, int totalService, int totalAC, int totalCC, Date saleDate) {
+    void addStoreDay(String storeId, int totalMobile, int totalElectronic, int totalNMP, int totalPP, int totalService, int totalAC, int totalCC, String saleDate) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String date = sdf.format(saleDate);
         cv.put(STORE_ID, storeId);
         cv.put(TOTAL_MOBILE, totalMobile);
         cv.put(TOTAL_ELECTRONIC, totalElectronic);
@@ -142,7 +140,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(TOTAL_SERVICE, totalService);
         cv.put(TOTAL_AC, totalAC);
         cv.put(TOTAL_CC, totalCC);
-        cv.put(SALE_DATE, date);
+        cv.put(SALE_DATE, saleDate);
 
         long result = db.insert(STORE_DAY_TABLE_NAME, null, cv);
         if (result == -1) {
@@ -232,6 +230,30 @@ class DatabaseHelper extends SQLiteOpenHelper {
         }
         return cursor;
     }
+
+    void deleteOneDay(String row_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(STORE_DAY_TABLE_NAME, "_id=?", new String[]{row_id});
+        if(result == -1){
+            Toast.makeText(context, "Failed to delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Deleted!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void deleteQuery(String storeId, String date) {
+        String query = "store_id = " + storeId + " AND sale_date = '" + date + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (db != null) {
+            int rowsDeleted = db.delete(SALES_TABLE_NAME, query, null);
+            if (rowsDeleted > 0) {
+                Toast.makeText(context, "Successfully Deleted!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to delete", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     void deleteOneRow(String row_id) {
         SQLiteDatabase db = this.getWritableDatabase();

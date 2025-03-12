@@ -1,15 +1,26 @@
 package com.example.techtracker;
 
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class SaleDays extends AppCompatActivity {
@@ -48,7 +61,8 @@ public class SaleDays extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recreate();
+                Intent intent = new Intent(SaleDays.this, MainActivity.class);
+                startActivity(intent);
             }
         });
         db = new DatabaseHelper(SaleDays.this);
@@ -69,10 +83,18 @@ public class SaleDays extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(SaleDays.this));
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.salesmenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     void storeData() {
         Cursor cursor = db.readAllStoreDayData();
         if(cursor.getCount() == 0){
-            Toast.makeText(this, "No data.", Toast.LENGTH_SHORT).show();
+
         } else {
             while (cursor.moveToNext() ) {
                 table_id.add(cursor.getString(0));
@@ -102,4 +124,34 @@ public class SaleDays extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.wipe) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Wipe the database?");
+            builder.setMessage("Are you sure you want to delete everything?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    db.clear();
+                    File file = new File("/data/data/com.example.techtracker/databases/Sales.db");
+                    File file2 = new File("/data/data/com.example.techtracker/databases/Sales.db-journal");
+
+                    if (file.exists()) {
+                        file.delete();
+                        file2.delete();
+                    }
+                    recreate();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            builder.create().show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
