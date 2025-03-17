@@ -20,7 +20,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     private Context context;
     Activity activity;
-    private ArrayList<String>table_id, date, time;
+    private ArrayList<String>table_id, date, time, storeid;
     private ArrayList<Integer>mobile_sales, electronic_sales, protection_plans, prepaid, service_tickets, applecare, consumer_cellular;
     int position;
     CustomAdapter(Activity activity,
@@ -34,7 +34,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                   ArrayList applecare,
                   ArrayList consumer_cellular,
                   ArrayList date,
-                  ArrayList time){
+                  ArrayList time,
+                  ArrayList storeid){
         this.table_id = table_id;
         this.activity = activity;
         this.context = context;
@@ -47,6 +48,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         this.consumer_cellular = consumer_cellular;
         this.date = date;
         this.time = time;
+        this.storeid = storeid;
 
     }
 
@@ -133,6 +135,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 intent.putExtra("Consumer", String.valueOf(consumer_cellular.get(position)));
                 intent.putExtra("Date", String.valueOf(date.get(position)));
                 intent.putExtra("Time", String.valueOf(time.get(position)));
+                intent.putExtra("Store ID", String.valueOf(storeid.get(position)));
                 boolean flag = true;
 
                 ArrayList<String> itemsToCheck = new ArrayList<>();
@@ -160,6 +163,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                     delete.putExtra("Consumer", String.valueOf(consumer_cellular.get(position)));
                     delete.putExtra("Date", String.valueOf(date.get(position)));
                     delete.putExtra("Time", String.valueOf(time.get(position)));
+                    delete.putExtra("Store ID", String.valueOf(storeid.get(position)));
                     activity.startActivityForResult(delete, 1);
                 }
             }

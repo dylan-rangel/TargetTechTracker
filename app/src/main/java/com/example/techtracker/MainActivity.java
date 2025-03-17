@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     String local_store_id;
     FloatingActionButton add_button;
     DatabaseHelper db;
-    ArrayList<String>table_id, date, time, query;
+    ArrayList<String>table_id, date, time, query, storeidArray;
     ArrayList<Integer>mobile_sales, electronic_sales, protection_plans, prepaid, service_tickets, applecare, consumer_cellular;
     CustomAdapter customAdapter;
     TextView totalText;
@@ -97,10 +97,11 @@ public class MainActivity extends AppCompatActivity {
         consumer_cellular = new ArrayList<>();
         date = new ArrayList<>();
         time = new ArrayList<>();
+        storeidArray = new ArrayList<>();
 
         storeData();
 
-        customAdapter = new CustomAdapter(MainActivity.this, this, table_id, mobile_sales, electronic_sales, protection_plans, prepaid, service_tickets, applecare, consumer_cellular, date, time);
+        customAdapter = new CustomAdapter(MainActivity.this, this, table_id, mobile_sales, electronic_sales, protection_plans, prepaid, service_tickets, applecare, consumer_cellular, date, time, storeidArray);
         recyclerView.setAdapter(customAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         setTotals();
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 consumer_cellular.add(cursor.getInt(7));
                 date.add(cursor.getString(8));
                 time.add(cursor.getString(9));
+                storeidArray.add(cursor.getString(10));
             }
         }
     }
@@ -282,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
             java.util.Date updateTime = new java.util.Date();
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(updateTime);
-            String update = "T" + local_store_id + " " + time + "\nAccessories: $" + totalArray.get(0) + "\nElectronics: $" + electronics + "\nProtection Plans: " + totalArray.get(2) + "\nPrepaids: " + totalArray.get(3) + "\nService Tickets: " + totalArray.get(4) + "\nAppleCare: " + totalArray.get(5) + "\nConsumer Cellular: " + totalArray.get(6) + "\n \nPosted using Target Tech Tracker Alpha 1.1.1";
+            String update = "T" + local_store_id + " " + time + "\nAccessories: $" + totalArray.get(0) + "\nElectronics: $" + electronics + "\nProtection Plans: " + totalArray.get(2) + "\nPrepaids: " + totalArray.get(3) + "\nService Tickets: " + totalArray.get(4) + "\nAppleCare: " + totalArray.get(5) + "\nConsumer Cellular: " + totalArray.get(6) + "\n \nPosted using Target Tech Tracker Alpha 1.1.2";
 
             // Copy to clipboard
             ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -303,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    storeId = input.getText().toString().trim(); // Get the input text
+                    storeId = input.getText().toString(); // Get the input text
                     // Validate the input
                     if (storeId.isEmpty()) {
                         // Show a toast if input is empty or null

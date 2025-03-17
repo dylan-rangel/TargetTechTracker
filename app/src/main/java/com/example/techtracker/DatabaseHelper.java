@@ -222,7 +222,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     Cursor returnCurrentData(String storeId, String date) {
-        String query = "SELECT * FROM " + SALES_TABLE_NAME + " WHERE store_id = " + storeId + " AND sale_date = '" + date + "'";
+        String query = "SELECT * FROM " + SALES_TABLE_NAME + " WHERE store_id = '" + storeId + "' AND sale_date = '" + date + "'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
         if (db != null) {

@@ -116,7 +116,7 @@ public class SaledayAdapter extends RecyclerView.Adapter<SaledayAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView Date, dayid, VariableText, mobile, electronics;
+        TextView Date, VariableText, mobile, electronics;
         Button delete;
         LinearLayout mainLayout;
 
