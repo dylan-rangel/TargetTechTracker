@@ -242,7 +242,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     void deleteQuery(String storeId, String date) {
-        String query = "store_id = " + storeId + " AND sale_date = '" + date + "'";
+        String query = "store_id = '" + storeId + "' AND sale_date = '" + date + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         if (db != null) {
             int rowsDeleted = db.delete(SALES_TABLE_NAME, query, null);
