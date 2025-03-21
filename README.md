@@ -33,19 +33,30 @@ Tech Tracker uses SQLite databases to store sales data locally. Each category ha
 
 ### Database Tables
 
-- **Sales Table**: Stores individual sale entries with relevant fields such as:
-  - `id`: A unique identifier for each sale.
-  - `category`: The sales category (e.g., Mobile Sales, Electronic Sales, etc.).
-  - `sale_date`: The date the sale was made.
-  - `amount`: The total amount for the sale.
-  - `notes`: Any additional notes or details about the sale.
+- **Days Table**: Stores individual sale entries with relevant fields such as:
+  - `id`
+  - `store_id`
+  - `total_mobile`
+  - `total_electronics`
+  - `total_nmp`
+  - `total_pp`
+  - `total_service`
+  - `total_ac`
+  - `total_cc`
+  - `sale_date`
   
-- **Support Tickets Table** (if applicable): Stores information about support tickets, with fields like:
-  - `ticket_id`: Unique identifier for the ticket.
-  - `issue_description`: A brief description of the support issue.
-  - `status`: The current status of the support ticket (e.g., Open, Resolved).
-  - `date_opened`: The date the ticket was opened.
-  - `resolved_date`: The date the ticket was resolved (if applicable).
+- **Support Tickets Table**: Stores individual sale entries
+  - `id`
+  - `mobile_sale`
+  - `electronic_sale`
+  - `protection_plan`
+  - `prepaid`
+  - `service_ticket`
+  - `apple_care`
+  - `consumer_cell`
+  - `sale_date`
+  - `sale_time`
+  - `store_id`
 
 ### Data Management
 
@@ -63,11 +74,8 @@ To install and use Tech Tracker, you'll need:
 - The ability to install APKs directly or use the Google Play Store.
 
 ### Installation
-
-1. **Via Google Play Store:**
-   - Search for "Tech Tracker" in the Google Play Store and click Install.
    
-2. **Via APK (manual installation):**
+1. **Via APK (manual installation):**
    - Download the APK file from the project's release page.
    - Enable "Install from Unknown Sources" in your Android device settings.
    - Open the APK file and follow the on-screen instructions to install.
