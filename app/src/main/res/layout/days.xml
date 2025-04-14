@@ -13,28 +13,28 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="78dp"
+            android:layout_height="match_parent"
             android:padding="12dp">
-
-            <TextView
-                android:id="@+id/VariableText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="4dp"
-                android:text="TextView"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/Date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="44dp"
                 android:text="TextView"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/VariableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                android:text="TextView"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -43,16 +43,35 @@
                 android:id="@+id/TotalMobile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
+                android:layout_marginStart="148dp"
+                android:layout_marginTop="-1dp"
                 android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/VariableText"
-                app:layout_constraintTop_toTopOf="@+id/VariableText" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/TotalElectronics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="@+id/TotalMobile"
+                app:layout_constraintTop_toBottomOf="@+id/TotalMobile" />
+
+            <TextView
+                android:id="@+id/totalNmp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="23dp"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="@+id/TotalMobile"
+                app:layout_constraintTop_toBottomOf="@+id/TotalMobile" />
+
+            <TextView
+                android:id="@+id/totalAct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="44dp"
                 android:text="TextView"
                 app:layout_constraintStart_toStartOf="@+id/TotalMobile"
                 app:layout_constraintTop_toBottomOf="@+id/TotalMobile" />
@@ -61,8 +80,8 @@
                 android:id="@+id/deleteDay"
                 android:layout_width="34dp"
                 android:layout_height="41dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="12dp"
                 android:backgroundTint="@color/red"
                 android:contentDescription="Delete"
                 android:gravity="center"

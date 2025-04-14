@@ -81,7 +81,10 @@ public class SaleDays extends AppCompatActivity {
 
         adapter = new SaledayAdapter(SaleDays.this, this, table_id, storeid, total_mobile, total_electronic, total_nmp, total_prepaid, total_service, total_ac, total_cc, date);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(SaleDays.this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(SaleDays.this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override

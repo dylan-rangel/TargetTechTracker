@@ -71,6 +71,8 @@ public class SaledayAdapter extends RecyclerView.Adapter<SaledayAdapter.ViewHold
             holder.VariableText.setText("Store: T" + storeId.get(position));
             holder.mobile.setText("Total Mobile: $" + String.valueOf(totalMobile.get(position)));
             holder.electronics.setText("Total Electronics: $" + String.valueOf(totalElectronic.get(position)));
+            holder.activations.setText("Activations: " + String.valueOf(totalCC.get(position) + totalPrepaid.get(position)));
+            holder.nmp.setText("NMPs: " + String.valueOf(totalProtection.get(position) + totalAc.get(position)));
         }
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,12 +118,14 @@ public class SaledayAdapter extends RecyclerView.Adapter<SaledayAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView Date, VariableText, mobile, electronics;
+        TextView Date, VariableText, mobile, electronics, activations, nmp;
         Button delete;
         LinearLayout mainLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            activations = itemView.findViewById(R.id.totalAct);
+            nmp = itemView.findViewById(R.id.totalNmp);
             delete = itemView.findViewById(R.id.deleteDay);
             Date = itemView.findViewById(R.id.Date);
             VariableText = itemView.findViewById(R.id.VariableText);

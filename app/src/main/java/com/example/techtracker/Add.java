@@ -45,6 +45,7 @@ public class Add extends AppCompatActivity {
                 int mobileSales = 0;
                 int electronicsSales = 0;
                 boolean fail = false;
+                currentDate = new java.util.Date();
 
                 // Check if the mobile sales input is valid, otherwise default to 0
                 if (!mobileSalesText.isEmpty()) {
@@ -67,6 +68,12 @@ public class Add extends AppCompatActivity {
                 }
 
                 if (mobileSalesText.isEmpty() && electronicsSalesText.isEmpty()) {
+                    mobileSales_input.setError("Please enter a valid number");
+                    electronicsSales_input.setError("Please enter a valid number");
+                    fail = true;
+                }
+
+                if (mobileSalesText.equals("0") || electronicsSalesText.equals("0")) {
                     mobileSales_input.setError("Please enter a valid number");
                     electronicsSales_input.setError("Please enter a valid number");
                     fail = true;

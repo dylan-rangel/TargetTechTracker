@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private String storeId;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String formattedDate = sdf.format(currentDate);
+    private boolean queryFlag = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 local_store_id = query.get(1);
                 formattedDate = query.get(0);
+                queryFlag = true; //make this a conditional to add a new sale for a previous sale day
             }
         } else if (query == null || query.isEmpty()) {
         } else {
@@ -103,7 +106,10 @@ public class MainActivity extends AppCompatActivity {
 
         customAdapter = new CustomAdapter(MainActivity.this, this, table_id, mobile_sales, electronic_sales, protection_plans, prepaid, service_tickets, applecare, consumer_cellular, date, time, storeidArray);
         recyclerView.setAdapter(customAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
         setTotals();
 
         ab.setTitle("Target Tech Sales @ T" + local_store_id);
