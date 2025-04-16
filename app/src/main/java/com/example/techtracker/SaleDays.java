@@ -155,6 +155,13 @@ public class SaleDays extends AppCompatActivity {
             });
             builder.create().show();
         }
+
+        if (item.getItemId() == R.id.query) {
+            Intent intent = new Intent(SaleDays.this, Query.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

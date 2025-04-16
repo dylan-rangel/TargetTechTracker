@@ -93,6 +93,7 @@ public class Add extends AppCompatActivity {
         acButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentDate = new java.util.Date();
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
                 GlobalString.getInstance().setToast("AppleCare Added");
                 myDB.addSale(0, 0, 0, 0, 0, 1, 0, currentDate, storeId);
@@ -104,6 +105,7 @@ public class Add extends AppCompatActivity {
         nmpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentDate = new java.util.Date();
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
                 GlobalString.getInstance().setToast("NMP Added");
                 myDB.addSale(0, 0, 1, 0, 0, 0, 0, currentDate, storeId);
@@ -115,6 +117,7 @@ public class Add extends AppCompatActivity {
         prepaidButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentDate = new java.util.Date();
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
                 GlobalString.getInstance().setToast("Prepaid Added");
                 myDB.addSale(0, 0, 0, 1, 0, 0, 0, currentDate, storeId);
@@ -126,6 +129,7 @@ public class Add extends AppCompatActivity {
         supportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentDate = new java.util.Date();
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
                 GlobalString.getInstance().setToast("Support Ticket Added");
                 myDB.addSale(0, 0, 0, 0, 1, 0, 0, currentDate, storeId);
@@ -137,6 +141,7 @@ public class Add extends AppCompatActivity {
         consumerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentDate = new java.util.Date();
                 DatabaseHelper myDB = new DatabaseHelper(Add.this);
                 GlobalString.getInstance().setToast("Consumer Cellular Added");
                 myDB.addSale(0, 0, 0, 0, 0, 0, 1, currentDate, storeId);

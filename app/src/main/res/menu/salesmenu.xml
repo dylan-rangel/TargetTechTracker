@@ -6,4 +6,9 @@
         android:id="@+id/wipe"
         android:title="Wipe Database"
         />
+
+    <item
+        android:id="@+id/query"
+        android:title="Query a sales month"
+        />
 </menu>

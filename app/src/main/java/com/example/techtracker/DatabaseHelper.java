@@ -162,6 +162,18 @@ class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    Cursor queryStoreDayData(String startDate, String endDate, String storeid)
+    {
+        String query = "SELECT * FROM " + STORE_DAY_TABLE_NAME + " WHERE store_id = '" + storeid + "' AND " + SALE_DATE + " BETWEEN '" + startDate + "' AND '" + endDate + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+        return cursor;
+    }
+
     void updateData(String row_id, String mobilesale, String electronicsale, String protectionPlan, String prepaid, String serviceTicket, String applecare, String consumerCell, String date, String time){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
